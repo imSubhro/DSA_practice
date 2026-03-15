@@ -1,0 +1,60 @@
+{
+  "DELETE": [
+    "/api/teams/<id>",
+    "/api/players/<id>",
+    "/api/tournaments/<id>"
+  ],
+  "GET": [
+    "/api/teams",
+    "/api/teams/<id>",
+    "/api/players",
+    "/api/players/<id>",
+    "/api/teams/<team_id>/players",
+    "/api/matches",
+    "/api/matches/<id>",
+    "/api/matches/<match_id>/innings",
+    "/api/innings/<innings_id>",
+    "/api/innings/<innings_id>/batting-stats",
+    "/api/innings/<innings_id>/bowling-stats",
+    "/api/innings/<innings_id>/balls",
+    "/api/innings/<innings_id>/score",
+    "/api/matches/<match_id>/scorecard",
+    "/api/tournaments",
+    "/api/tournaments/<id>",
+    "/api/tournaments/<tournament_id>/stages",
+    "/api/stages/<id>",
+    "/api/stages/<stage_id>/groups",
+    "/api/groups/<id>",
+    "/api/groups/<group_id>/teams",
+    "/api/groups/<group_id>/points-table",
+    "/api/stages/<stage_id>/matches",
+    "/api/groups/<group_id>/matches",
+    "/api/tournaments/<tournament_id>/bracket",
+    "/api/tournaments/<tournament_id>/stats",
+    "/docs"
+  ],
+  "PATCH": [],
+  "POST": [
+    "/api/teams",
+    "/api/players",
+    "/api/matches",
+    "/api/matches/<match_id>/innings",
+    "/api/innings/<innings_id>/batting-stats",
+    "/api/innings/<innings_id>/bowling-stats",
+    "/api/innings/<innings_id>/balls",
+    "/api/tournaments",
+    "/api/tournaments/<tournament_id>/stages",
+    "/api/stages/<stage_id>/groups",
+    "/api/groups/<group_id>/teams",
+    "/api/stages/<stage_id>/matches",
+    "/api/matches/<match_id>/update-points-table"
+  ],
+  "PUT": [
+    "/api/teams/<id>",
+    "/api/players/<id>",
+    "/api/matches/<id>/toss",
+    "/api/matches/<id>/status",
+    "/api/tournaments/<id>",
+    "/api/stages/<id>"
+  ]
+}

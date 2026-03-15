@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Sports Poll</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(
+          to bottom,
+          #ff7e7e 0%,
+          #ff9696 25%,
+          #ffefef 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stats-container {
+        width: 100%;
+        max-width: 360px;
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+
+      .stat-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stat-circle {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .stat-circle img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      .stat-bar {
+        width: 60px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-bar-fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        transition: height 0.8s ease;
+      }
+
+      .card {
+        background-color: white;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 360px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .match-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .live-badge {
+        position: absolute;
+        top: -10px;
+        background-color: #ff4b4b;
+        color: white;
+        font-size: 12px;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+      }
+
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background-color: white;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+
+      .teams-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 20px;
+      }
+
+      .team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .team-logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        overflow: hidden;
+      }
+
+      .team-logo img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .team-name {
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .vs {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .poll-card {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .poll-title {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .poll-options {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .poll-option {
+        flex: 1;
+        height: 80px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        padding: 10px;
+      }
+
+      .poll-option:hover {
+        background-color: #e8e8e8;
+      }
+
+      .poll-option.voted {
+        color: white;
+      }
+
+      .poll-fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ff4b4b;
+        transition: height 0.5s ease;
+        z-index: 0;
+      }
+
+      .poll-option span {
+        position: relative;
+        z-index: 1;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .poll-option .option-logo {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #333;
+        margin-bottom: 5px;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .poll-option .option-logo img {
+        width: 25px;
+        height: 25px;
+      }
+
+      .poll-option.teama .poll-fill {
+        background-color: #ff6b6b;
+      }
+
+      .poll-option.teamb .poll-fill {
+        background-color: #ff6b6b;
+      }
+
+      .poll-option.superover .poll-fill {
+        background-color: #ff6b6b;
+      }
+
+      .previous-card {
+        padding-bottom: 10px;
+      }
+
+      .previous-title {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th {
+        text-align: left;
+        padding: 8px 5px;
+        font-size: 14px;
+      }
+
+      td {
+        padding: 8px 5px;
+        font-size: 14px;
+      }
+
+      .navigation {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        border-top: 1px solid #eee;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .nav-item.active {
+        color: #ff4b4b;
+      }
+
+      .nav-icon {
+        margin-bottom: 5px;
+        font-size: 20px;
+      }
+
+      .percentage-label {
+        position: absolute;
+        bottom: 5px;
+        font-size: 10px;
+        font-weight: bold;
+        color: #333;
+        z-index: 1;
+      }
+
+      .notification {
+        position: fixed;
+        top: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        display: none;
+        z-index: 100;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Notification popup -->
+    <div id="notification" class="notification">Vote registered!</div>
+
+    <!-- Stats visualization at the top -->
+    <div class="stats-container">
+      <div class="stat-column">
+        <div class="stat-circle">
+          <img src="/api/placeholder/40/40" alt="Team A" />
+        </div>
+        <div class="stat-bar" style="height: 80px">
+          <div class="stat-bar-fill" style="height: 0%"></div>
+        </div>
+        <div class="percentage-label">0%</div>
+      </div>
+      <div class="stat-column">
+        <div class="stat-circle">
+          <img src="/api/placeholder/40/40" alt="Super Over" />
+        </div>
+        <div class="stat-bar" style="height: 120px">
+          <div class="stat-bar-fill" style="height: 0%"></div>
+        </div>
+        <div class="percentage-label">0%</div>
+      </div>
+      <div class="stat-column">
+        <div class="stat-circle">
+          <img src="/api/placeholder/40/40" alt="Team B" />
+        </div>
+        <div class="stat-bar" style="height: 100px">
+          <div class="stat-bar-fill" style="height: 0%"></div>
+        </div>
+        <div class="percentage-label">0%</div>
+      </div>
+    </div>
+
+    <!-- Live match card -->
+    <div class="card match-card">
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        LIVE NOW
+      </div>
+
+      <div class="teams-container">
+        <div class="team">
+          <div class="team-logo">
+            <img src="/api/placeholder/40/40" alt="Team A" />
+          </div>
+          <div class="team-name">TEAM A</div>
+        </div>
+
+        <div class="vs">VS</div>
+
+        <div class="team">
+          <div class="team-logo">
+            <img src="/api/placeholder/40/40" alt="Team B" />
+          </div>
+          <div class="team-name">TEAM B</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Poll card -->
+    <div class="card poll-card">
+      <div class="poll-title">Place your vote</div>
+
+      <div class="poll-options">
+        <button class="poll-option teama" onclick="vote('Team A')">
+          <div class="poll-fill" style="height: 0%"></div>
+          <div class="option-logo">
+            <img src="/api/placeholder/25/25" alt="Team A" />
+          </div>
+          <span>Team A</span>
+        </button>
+
+        <button class="poll-option teamb" onclick="vote('Team B')">
+          <div class="poll-fill" style="height: 0%"></div>
+          <div class="option-logo">
+            <img src="/api/placeholder/25/25" alt="Team B" />
+          </div>
+          <span>Team B</span>
+        </button>
+
+        <button class="poll-option superover" onclick="vote('Super Over')">
+          <div class="poll-fill" style="height: 0%"></div>
+          <div class="option-logo">
+            <img src="/api/placeholder/25/25" alt="Super Over" />
+          </div>
+          <span>Super Over</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Previous matches card -->
+    <div class="card previous-card">
+      <div class="previous-title">Previous Matches</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Match</th>
+            <th>Winner</th>
+            <th>Votes</th>
+          </tr>
+        </thead>
+        <tbody id="previous-matches">
+          <!-- This will be filled by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // API endpoint
+      const API_URL = "http://localhost:5000";
+
+      // Match ID (you can change this or get it from URL params)
+      const MATCH_ID = "match1";
+
+      // Store votes
+      let votes = {
+        "Team A": 0,
+        "Team B": 0,
+        "Super Over": 0,
+        "Total Votes": 0,
+      };
+
+      // Previous matches data
+      const previousMatches = [];
+
+      // User's vote
+      let userVote = null;
+      let hasVoted = false;
+
+      // Live dot animation
+      setInterval(() => {
+        const liveDot = document.querySelector(".live-dot");
+        liveDot.style.opacity = liveDot.style.opacity === "0.5" ? "1" : "0.5";
+      }, 800);
+
+      // Show notification
+      function showNotification(message) {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.style.display = "block";
+
+        setTimeout(() => {
+          notification.style.display = "none";
+        }, 3000);
+      }
+
+      // Vote function
+      async function vote(option) {
+        if (hasVoted) {
+          showNotification("You have already voted in this match!");
+          return;
+        }
+
+        try {
+          // Send vote to the server
+          const response = await fetch(`${API_URL}/vote`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              choice: option,
+              match_id: MATCH_ID,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            showNotification(errorData.error || "Failed to register vote");
+            return;
+          }
+
+          const data = await response.json();
+
+          // Update local state
+          votes = data.votes;
+          userVote = option;
+          hasVoted = true;
+
+          // Update UI
+          updatePollDisplay();
+          showNotification("Vote registered successfully!");
+        } catch (error) {
+          console.error("Error voting:", error);
+          showNotification("Error connecting to server");
+        }
+      }
+
+      // Update the poll visualization
+      function updatePollDisplay() {
+        const options = ["Team A", "Team B", "Super Over"];
+        const totalVotes = votes["Total Votes"] || 1; // Avoid division by zero
+
+        options.forEach((option, index) => {
+          const percentage = votes[option] || 0;
+
+          // Get class name from option (convert "Team A" to "teama")
+          const className = option.toLowerCase().replace(" ", "");
+
+          // Update poll options
+          const element = document.querySelector(`.poll-option.${className}`);
+          const fill = element.querySelector(".poll-fill");
+
+          // Update height to show percentage
+          fill.style.height = `${percentage}%`;
+
+          // Add voted class if this is user's vote
+          if (option === userVote) {
+            element.classList.add("voted");
+          } else {
+            element.classList.remove("voted");
+          }
+
+          // Update stat bars at the top
+          const statBarFill =
+            document.querySelectorAll(".stat-bar-fill")[index];
+          statBarFill.style.height = `${percentage}%`;
+
+          // Update percentage labels
+          const percentageLabel =
+            document.querySelectorAll(".percentage-label")[index];
+          percentageLabel.textContent = `${Math.round(percentage)}%`;
+
+          // Update poll option labels
+          element.querySelector("span").textContent = `${option} (${Math.round(
+            percentage
+          )}%)`;
+        });
+      }
+
+      // Add some sample previous matches data
+      function initializePreviousMatches() {
+        previousMatches.push({
+          id: 1,
+          match: "Team A vs Team B",
+          winner: "Team A",
+          votes: 234,
+        });
+
+        // Render previous matches
+        const tbody = document.getElementById("previous-matches");
+        previousMatches.forEach((match) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td>${match.id}</td>
+          <td>${match.match}</td>
+          <td>${match.winner}</td>
+          <td>${match.votes}</td>
+        `;
+          tbody.appendChild(row);
+        });
+      }
+
+      // Fetch results from server
+      async function fetchResults() {
+        try {
+          const response = await fetch(
+            `${API_URL}/results?match_id=${MATCH_ID}`
+          );
+          if (!response.ok) {
+            console.error("Failed to fetch results");
+            return;
+          }
+
+          const data = await response.json();
+          votes = data.votes;
+          updatePollDisplay();
+        } catch (error) {
+          console.error("Error fetching results:", error);
+        }
+      }
+
+      // Initialize
+      window.onload = () => {
+        initializePreviousMatches();
+        fetchResults();
+
+        // Poll for updates every 5 seconds
+        setInterval(fetchResults, 5000);
+      };
+    </script>
+  </body>
+</html>
