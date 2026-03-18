@@ -116,3 +116,34 @@
 # if num2 != 0:
 #     num1, num2 = num2, num1 % num2
 # print("GCD/HCF of the two numbers is: ", num1)
+
+
+# Array input
+
+n = int(input("Enter the size of the array: "))
+arr = list(map (int, input("Enter the elements of the array: ").split()))
+
+#REVERSE ARRAY
+# print("reversed array: ", arr[::-1])
+
+# #SUM OF ARRAY
+# total = 0
+# for num in arr:
+#     total += num
+# print("Sum of elements in the array: ", total)
+
+#sorted array
+# sorted_arr = sorted(arr)
+# print("Sorted array: ", sorted_arr)
+
+# is_sorted = True
+
+# for i in range(len(arr) - 1):
+#     if arr[i] > arr[i + 1]:
+#         is_sorted = False
+#         break
+
+# if is_sorted:
+#     print("Sorted")
+# else:
+#     print("Not Sorted")
