@@ -120,8 +120,8 @@
 
 # Array input
 
-n = int(input("Enter the size of the array: "))
-arr = list(map (int, input("Enter the elements of the array: ").split()))
+# n = int(input("Enter the size of the array: "))
+# arr = list(map (int, input("Enter the elements of the array: ").split()))
 
 #REVERSE ARRAY
 # print("reversed array: ", arr[::-1])
