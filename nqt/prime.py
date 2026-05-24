@@ -27,7 +27,6 @@
 
 # for num in range (start,end+1):
 #     if num>1:
-        
 #         for i in range(2,num):
 #             if num%i == 0:
 #                 is_prime = False
@@ -37,26 +36,26 @@
         
 
 
-# prime number given 1 gap prime no 
+# prime number given gap prime no 
 
-# start = int(input("Enter the starting number: "))
-# end = int(input("Enter the ending number: "))   
-# gap = int(input("Enter the gap between prime numbers: "))
+start = int(input("Enter the starting number: "))
+end = int(input("Enter the ending number: "))   
+gap = int(input("Enter the gap between prime numbers: "))
 
-# primes =[]
 
-# for num in range (start,end+1):
-#     if num>1:
-#         is_prime = True
-#         for i in range(2,num):
-#             if num%i == 0:
-#                 is_prime = False
-#                 break 
-#         else:
-#             primes.append(num)
+primes =[]
+for num in range (start,end+1):
+    if num>1:
+        is_prime = True
+        for i in range(2,num):
+            if num%i == 0:
+                is_prime = False
+                break 
+        else:
+            primes.append(num)
 
         
-# for i in range(0, len(primes), gap+1):
-#     print(primes[i], end=" ")
+for i in range(0, len(primes), gap+1):
+    print(primes[i], end=" ")
 
         
